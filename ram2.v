@@ -4,8 +4,6 @@ parameter BCK_CELL = 5)(
 input [15:0] data,
 input [15:0] addr,
 input we,
-
-
 input clk,
 input reset_n,
 output [15:0] q
