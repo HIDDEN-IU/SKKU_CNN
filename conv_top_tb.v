@@ -47,8 +47,6 @@ reg signed [15:0] img_in;
 
 wire pass;
 reg i_load, w_load;
-wire signed [15:0] i_out1, i_out2, i_out3, w_out1, w_out2, w_out3;
-wire signed [15:0] io1, io2, io3;
 wire signed [15:0] result;
 wire signed [15:0] pooling_out;
 wire done_pooling;
