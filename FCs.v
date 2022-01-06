@@ -4,6 +4,8 @@ parameter MID_CELL = 20,
 parameter BCK_CELL = 10)(
 input clk,
 input reset_n,
+
+
 input enable,
 input [15:0] input_value,
 
