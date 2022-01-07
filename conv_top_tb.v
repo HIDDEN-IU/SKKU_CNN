@@ -5,10 +5,6 @@ module CONV_TOP_TB();
 
 reg clk;
 
-wire [15:0] out1;
-wire [15:0] out2;
-wire [15:0] out3;
-
 parameter IMG = 8'd14;
 parameter PAD = 8'd1;
 parameter SIZE = 8'd16;
@@ -45,13 +41,9 @@ reg signed [15:0] img_in;
 
 //end of integer input*/
 
-wire pass;
 reg i_load, w_load;
-wire signed [15:0] result;
 wire signed [15:0] pooling_out;
 wire done_pooling;
-
-wire end_sig, srt_sig;
 
 CONV_TOP   #(.IMG(IMG), .PAD(PAD)) CONVTOP1(
                     .clk(clk), .rst_n(rst_n),
@@ -63,7 +55,7 @@ CONV_TOP   #(.IMG(IMG), .PAD(PAD)) CONVTOP1(
 
 initial begin
     forever begin 
-        #10 clk = !clk;
+        #5 clk = !clk;
     end
 end
 reg load_reg;
@@ -73,10 +65,10 @@ initial begin
     rst_n = 1'b0;
     i_load = 1'b0;
     w_load = 1'b0;
-    #80 rst_n = 1'b1;
-    #50 w_load = 1'b1;
-    #30 w_load = 1'b0;
-    #300;
+    #40 rst_n = 1'b1;
+    #30 w_load = 1'b1;
+    #10 w_load = 1'b0;
+    #40;
     #40 i_load = 1'b1;
     #30 i_load = 1'b0;
     count = 0;
@@ -87,8 +79,8 @@ initial begin
             count = count+1;
         end
     end
-    #200;
-ur    $stop;
+    #10000;
+    $stop;
 end
 
 endmodule
