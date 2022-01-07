@@ -88,7 +88,8 @@ initial begin
         end
     end
     #200;
-ur    $stop;
+    $stop;
+	i
 end
 
 endmodule
