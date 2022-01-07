@@ -7,7 +7,8 @@ input i_load,//single clock signal
 input w_load,
 input signed [15:0] img_in,
 output [15:0] pooling_out,
-output done_pooling
+output done_pooling,
+output [15:0] addr
 );
 
 localparam SIZE = IMG + 2*PAD;
@@ -35,7 +36,7 @@ SYS_ARRAY #(.SIZE(SIZE)) SYS1 (.clk(clk), .rst_n(rst_n), .pass(pass), .srt_sig(s
 
 POOLING #(.n(SIZE/2-1)) POOL1 (.clk(clk), .reset_n(rst_n), .en_reg(srt_pool),
                                .en_pooling(end_sig), .conv_out(result),
-                               .pooling_out(pooling_out), .done_pooling(done_pooling));
+                               .pooling_out(pooling_out), .done_pooling(done_pooling), .addr(addr));
 
 
 endmodule
