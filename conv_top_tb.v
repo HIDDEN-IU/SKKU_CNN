@@ -44,6 +44,7 @@ reg signed [15:0] img_in;
 reg i_load, w_load;
 wire signed [15:0] pooling_out;
 wire done_pooling;
+wire [15:0] addr;
 
 CONV_TOP   #(.IMG(IMG), .PAD(PAD)) CONVTOP1(
                     .clk(clk), .rst_n(rst_n),
@@ -51,7 +52,8 @@ CONV_TOP   #(.IMG(IMG), .PAD(PAD)) CONVTOP1(
                     .w_load(w_load),
                     .img_in(img_in),
                     .pooling_out(pooling_out),
-                    .done_pooling(done_pooling));
+                    .done_pooling(done_pooling),
+                    .addr(addr));
 
 initial begin
     forever begin 
@@ -65,17 +67,14 @@ initial begin
     rst_n = 1'b0;
     i_load = 1'b0;
     w_load = 1'b0;
-    #40 rst_n = 1'b1;
-    #30 w_load = 1'b1;
-    #10 w_load = 1'b0;
-    #40;
-    #40 i_load = 1'b1;
-    #30 i_load = 1'b0;
+    #10 rst_n = 1'b1;
+    #10 w_load = 1'b1;i_load = 1'b1;
+    #10 w_load = 1'b0; i_load = 1'b0;
     count = 0;
     for (i = 0; i<SIZE; i = i+1)begin
         for(j = 0; j<SIZE; j = j+1)begin
             img_in = count;
-            #20;
+            #10;
             count = count+1;
         end
     end
