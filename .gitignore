@@ -5,3 +5,7 @@ work
 work/
 
 *.mpf
+
+*.mti
+
+*.wlf
