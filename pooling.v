@@ -46,19 +46,21 @@ begin : OUT_GEN
         end
     end else if (en_pooling) begin
         if (count_end !== n) begin
-            addr_reg <= addr_reg + 8'd1;
             if (count == 0) begin
                 row <= 8'd0;
                 col <= 8'd0;
                 count <= count + 1;
+                addr_reg <= 0;
             end else if (count == n) begin
                 row <= row + 8'd2;
                 col <= 8'd0;
                 count <= 8'd1;
                 count_end <= count_end + 8'd1;
+                addr_reg <= addr_reg + 8'd1;
             end else begin
                 col <= col + 8'd2;
                 count <= count + 8'd1;
+                addr_reg <= addr_reg + 8'd1;
                 if (count_end == n-1 && count == n-1)
                     count_end <= count_end + 8'd1;
             end

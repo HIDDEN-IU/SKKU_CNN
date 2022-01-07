@@ -30,9 +30,12 @@ initial begin
     #25 reset = 1'b1;
     #10 en_reg = 1'b1;
     @(posedge clk);
-    for (i = 0; i < LEN * LEN; i = i+1) begin
+    for (i = 1; i < LEN * LEN + 1; i = i+1) begin
         conv_out = i;
         #20;
+        if (i % LEN == 0)begin
+            #40;
+        end
     end
     en_reg = 1'b0;
     en_pooling = 1'b1;
