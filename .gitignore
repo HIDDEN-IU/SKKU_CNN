@@ -1,1 +1,7 @@
 *.bak
+
+work
+
+work/
+
+*.mpf
