@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 //MAIN MODULE
 module MEM_TEST(
 );
@@ -43,3 +44,5 @@ module MEM_TEST_TB();
 
 
 endmodule
+=======
+>>>>>>> Stashed changes
