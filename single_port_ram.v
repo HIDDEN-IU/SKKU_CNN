@@ -14,7 +14,7 @@ output [15:0] q
 reg [15:0] ram[65535:0];
 
 // Variable to hold the registered read address
-reg [65535:0] addr_reg;
+reg [15:0] addr_reg;
 
 always @ (posedge clk)
 begin

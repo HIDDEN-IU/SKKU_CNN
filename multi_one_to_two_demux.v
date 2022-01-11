@@ -1,6 +1,4 @@
-module multi_one_to_two_demux #(
-parameter FRT_CELL = 120,
-parameter MID_CELL = 84)(
+module multi_one_to_two_demux (
 input we,
 input [15:0]data,
 input [15:0]addr,

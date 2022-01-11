@@ -108,7 +108,9 @@ begin
 				 addr <= 1'b0;
 				end
 			end
-		end
+		end else begin
+            com_end <= 1'b0;
+        end
 	end
 end
 

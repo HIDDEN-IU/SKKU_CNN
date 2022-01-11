@@ -9,13 +9,11 @@ input reset_n,
 output [15:0] q
 );
 
-`include "bits_required.v"
-
 // Declare the RAM variable
 reg [15:0] ram[65535:0];
 
 // Variable to hold the registered read address
-reg [65535:0] addr_reg;
+reg [15:0] addr_reg;
 
 reg [15:0] i;
 
@@ -27,16 +25,13 @@ begin
 			ram[i] <= -250 + 10*(i-FRT_CELL);
 		end
 	end else begin
-		if (we)
+		if (we) begin
 			ram[addr] <= data;
-		
+		end
 		addr_reg <= addr;
 	end
 end
-	
-// Continuous assignment implies read returns NEW data.
-// This is the natural behavior of the TriMatrix memory
-// blocks in Single Port mode.  
+
 assign q = ram[addr_reg];
 
 endmodule
