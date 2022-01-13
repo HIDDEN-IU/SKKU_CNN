@@ -15,7 +15,7 @@ output srt_pool,
 output end_sig
 );
 
-`include "ReLU.v"
+`include "ReLU6.v"
 //wires between PEs and I/O.
 wire               pass_wire [1:3][0:3];
 wire signed [15:0] in_h      [1:3];

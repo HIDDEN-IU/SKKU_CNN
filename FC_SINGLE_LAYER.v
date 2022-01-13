@@ -14,7 +14,7 @@ output reg layer_end	//layer operation end
 );
 
 `include "fixed_mult.v"
-`include "ReLU.v"
+`include "ReLU6.v"
 
 reg signed [15:0] front_cell [FRT_CELL - 1:0];
 reg signed [15:0] weight[BCK_CELL - 1:0][FRT_CELL - 1:0];
@@ -75,7 +75,7 @@ begin
 							com_j <= com_j + 1'b1;
 						end else begin
 							//Comment out the one line below and fixed_mult's shift line if you want to see if it's correct
-							back_cell[com_i] <= ReLU(back_cell[com_i]);
+							back_cell[com_i] <= ReLU6(back_cell[com_i]);
 							com_i <= com_i + 1'b1;
 							com_j <= 1'b0;
 							//computation end
