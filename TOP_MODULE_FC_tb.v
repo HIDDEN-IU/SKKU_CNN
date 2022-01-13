@@ -57,10 +57,10 @@ begin
     BCK_PROP_START = 1'b1; ENABLE = 1'b0;
     #3000;
     
-    /*ENABLE = 1'b1; BCK_PROP_START = 1'b0;
-    #5000;
+    //ENABLE = 1'b1; BCK_PROP_START = 1'b0;
+    //#5000;
     
-    BCK_PROP_START = 1'b1; ENABLE = 1'b0;
+    /*BCK_PROP_START = 1'b1; ENABLE = 1'b0;
     #2000;*/
     $stop;
 end

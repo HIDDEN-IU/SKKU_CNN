@@ -23,7 +23,7 @@ begin
 end
 
 UNPOOLING #(
-.size(4'd8)) unpooling(
+.SIZE(4'd8)) unpooling(
 .clk(CLK),
 .reset_n(RESET_N),
 .unpool_start(UNPOOL_START),

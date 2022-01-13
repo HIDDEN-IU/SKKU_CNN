@@ -6,6 +6,7 @@ input clk,
 input reset_n,
 input enable,
 input [15:0] input_value,
+//input fc_bck_prop_end,
 
 output all_end,
 output we,

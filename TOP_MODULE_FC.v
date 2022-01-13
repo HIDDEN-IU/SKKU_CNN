@@ -10,6 +10,10 @@ input flat_we,              //flatten input write enable
 input [15:0] flat_value,    //flatten input data
 input [15:0] flat_addr,     //flatten input address
 input bck_prop_start,
+//input batch_end,
+//input weight1,
+//input weight2,
+//input right_answer,
 
 output all_end,             //signal to controller, FC finished
 output fc_bck_prop_end,     //propagation in FC finished
@@ -55,6 +59,7 @@ FC_MEMORY #(
 .fc1_com_end(fc1_com_end),
 .fc2_com_end(fc2_com_end),
 .bck_prop_start(bck_prop_start),
+.batch_end(batch_end),
 
 .re_data(re_data),
 .fc_bck_prop_end(fc_bck_prop_end),
@@ -82,5 +87,18 @@ begin : DATA_SELECTOR
         end
     endcase
 end
+
+/*always @(*)
+begin : EXTERNAL_DATA_ENCODER
+    case({fc1_com_end, fc2_com_end, enable, weight1, weight2, right_answer})
+        6'b000100 : {select1, select2} = 2'b00  //weight1 in
+        6'b000010 : {select1, select2} = 2'b01  //weight2 in
+        6'b000001 : {select1, select2} = 2'b11  //right answer in
+        6'b001000 : {select1, select2} = 2'b00  //enable  -> FC start
+        6'b101000 : {select1, select2} = 2'b00  //FC1 computation end, output cell2 value
+        6'b111000 : {select1, select2} = 2'b01  //FC2
+        6'b111000 : {select1, select2} = 2'b11
+    endcase
+end*/
 
 endmodule
