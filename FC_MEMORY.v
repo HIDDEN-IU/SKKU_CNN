@@ -12,13 +12,14 @@ input [15:0] addr,
 
 input fc1_com_end,
 input fc2_com_end,
-input bck_prop_start,
-input batch_end,
+input bck_prop_start,   //start back propagation in each batch 
+input batch_end,        //all 32 mini batch is done
 
 output [15:0] re_data,
 output reg fc_bck_prop_end,
 output reg [15:0] fc_err_prop,
-output reg [15:0] fc_err_addr
+output reg [15:0] fc_err_addr,
+output reg fc_batch_end
 );
 
 `include "fixed_mult.v"
@@ -32,7 +33,8 @@ reg [1:0] mem_num_d, mem_num_m;
 // Variable to hold the registered read address
 reg [15:0] addr_reg;
 
-reg signed[15:0] i,back_i, mid_i, mid_j, front_i, front_j, out_i;
+reg signed [15:0] i,back_i, mid_i, mid_j, front_i, front_j, out_i;
+reg signed [15:0] update_i, update_j;
 
 
 
@@ -42,45 +44,38 @@ begin
     if (!reset_n) begin
         /*-----------------------------ram0---------------------------------
         0~31(0~FRT_CELL-1) : convolution result
-        32~671(~FRT_CELL + FRT_CELL*MID_CELL - 1) : first weight, updated after
+        32~671(~FRT_CELL + FRT_CELL*MID_CELL - 1) : first weight, updated batch done
         672~703(~2*FRT_CELL + FRT_CELL*MID_CELL - 1) : error to propagate
         704~1343(~2*FRT_CELL + 2*FRT_CELL*MID_CELL - 1) : accumulate delta weight
         ------------------------------------------------------------------*/
-        for (i=FRT_CELL; i<(FRT_CELL * MID_CELL + FRT_CELL); i = i+1) begin
-            ram[0][i] <= -250 + 3*(i-FRT_CELL);
+        for (i=0; i<(FRT_CELL * MID_CELL); i = i+1) begin
+            ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + i] <= 1'b0;
         end
-        //------------------------------------------------------------------
         
         /*-----------------------------ram1--------------------------------
         0~19(0~MID_CELL-1) : forward propagation cell result
-        20~219(~MID_CELL + MID_CELL*BCK_CELL- 1) : second weight, updated after
+        20~219(~MID_CELL + MID_CELL*BCK_CELL- 1) : second weight, updated batch done
         220~239(~2*MID_CELL + MID_CELL*BCK_CELL - 1) : error to propagate
         240~439(~2*MID_CELL + 2*MID_CELL*BCK_CELL - 1) : accumulate delta weight
         ------------------------------------------------------------------*/
-        for (i=MID_CELL; i<(MID_CELL * BCK_CELL + MID_CELL); i = i+1) begin
-            ram[1][i] <= -250 + 10*(i-MID_CELL);
+        for (i=0; i<(MID_CELL * BCK_CELL); i = i+1) begin
+            ram[1][2*MID_CELL + MID_CELL*BCK_CELL + i] <= 1'b0;
         end
-        //-----------------------------------------------------------------
         
         /*-----------------------------ram2--------------------------------
         0~9(0~BCK_CELL-1): forward propagation cell result
-        10~19(BCK_CELL~2*BCK_CELL-1) : accumulated error
-        20~29(2*BCK_CELL~3*BCK_CELL-1) : first right answer
-        30~39(3*BCK_CELL~4*BCK_CELL-1) : second right answer
-        40~49(4*BCK_CELL~5*BCK_CELL-1) : third right answer...
+        10~19(BCK_CELL~2*BCK_CELL-1) : right answer
+        20~29(2*BCK_CELL~3*BCK_CELL-1) : error
         -----------------------------------------------------------------*/
-        for (i=BCK_CELL; i < (3 * BCK_CELL); i = i+1) begin
+        /*for (i=BCK_CELL; i < (3 * BCK_CELL); i = i+1) begin
             ram[2][i] <= 1'b0;
-        end
+        end*/
         
         //write # at ram[BCK_CELL + #] to correct order,
         //if 5 is correct number, # = 5
-        ram[2][BCK_CELL + 3] <= (1'b1 << 10) + (1'b1 << 9);
+        /*ram[2][BCK_CELL + 3] <= (1'b1 << 10) + (1'b1 << 9);*/
     end else begin
-        if (we) begin
-            ram[mem_num_d][addr] <= data;
-        end
-        addr_reg <= addr;
+        
         
         
         
@@ -107,7 +102,8 @@ begin
                             
                             //delta weight = r * cell * error
                             ram[1][2*MID_CELL + MID_CELL*BCK_CELL + mid_i*MID_CELL + mid_j]
-                                <= fixed_mult(LN_RATIO, fixed_mult(ram[1][mid_j], ram[2][2*BCK_CELL + mid_i]));       //delta weight
+                                <= ram[1][2*MID_CELL + MID_CELL*BCK_CELL + mid_i*MID_CELL + mid_j]
+                                    + fixed_mult(LN_RATIO, fixed_mult(ram[1][mid_j], ram[2][2*BCK_CELL + mid_i]));       //delta weight
                             mid_j <= mid_j + 1'b1;
                             if (mid_j == (MID_CELL - 1'b1)) begin
                                 mid_i <= mid_i + 1'b1;
@@ -129,7 +125,8 @@ begin
                                 
                                 //delta weight = r * cell * error
                                 ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + front_i*FRT_CELL + front_j]
-                                    <= fixed_mult(LN_RATIO, fixed_mult(ram[0][front_j], ram[1][MID_CELL*BCK_CELL + MID_CELL + front_i]));       //delta weight
+                                    <= ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + front_i*FRT_CELL + front_j]
+                                        + fixed_mult(LN_RATIO, fixed_mult(ram[0][front_j], ram[1][MID_CELL*BCK_CELL + MID_CELL + front_i]));       //delta weight
                                 front_j <= front_j + 1'b1;
                                 if (front_j == (FRT_CELL - 1'b1)) begin
                                     front_i <= front_i + 1'b1;
@@ -151,13 +148,31 @@ begin
                 {back_i, mid_i, mid_j, front_i, front_j, out_i} <= 1'b0;
             end
         end else begin
+            if (we) begin
+                ram[mem_num_d][addr] <= data;
+            end
+            addr_reg <= addr;
+            
             {back_i, mid_i, mid_j, front_i, front_j, out_i} <= 1'sb1;
             fc_bck_prop_end <= 1'b0;
         end
         
-        //when every 32 batch end
+        //---------------------------------32 mini batch finished-----------------------------------//
         if (batch_end) begin
-            
+            if (update_i < (FRT_CELL*MID_CELL)) begin
+                ram[0][FRT_CELL + update_i] <= ram[0][FRT_CELL + update_i] + (ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + update_i] >>> 5);
+                ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + update_i] <= 1'b0;
+                update_i <= update_i + 1'b1;
+            end else begin
+                fc_batch_end <= 1'b1;
+            end
+            if (update_j < (MID_CELL*BCK_CELL)) begin
+                ram[1][MID_CELL + update_j] <= ram[1][MID_CELL + update_j] + (ram[1][2*MID_CELL + MID_CELL*BCK_CELL + update_j] >>> 5);
+                ram[1][2*MID_CELL + MID_CELL*BCK_CELL + update_j] <= 1'b0;
+                update_j <= update_j + 1'b1;
+            end
+        end else begin
+            {update_i, update_j,fc_batch_end} <= 1'b0;
         end
     end
 end

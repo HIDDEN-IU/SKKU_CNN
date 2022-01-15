@@ -110,6 +110,7 @@ begin
 			end
 		end else begin
             com_end <= 1'b0;
+            layer_end <= 1'b0;
         end
 	end
 end
