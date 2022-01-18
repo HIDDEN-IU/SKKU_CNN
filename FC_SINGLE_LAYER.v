@@ -1,6 +1,6 @@
 module FC_SINGLE_LAYER #(
-parameter FRT_CELL = 10,
-parameter BCK_CELL = 5)(
+parameter FRT_CELL = 32,
+parameter BCK_CELL = 20)(
 input clk,
 input reset_n,
 input enable,

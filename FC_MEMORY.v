@@ -6,20 +6,20 @@ parameter BATCH_SIZE = 32)(
 input clk,
 input reset_n,
 
-input we,
+input we,               //data write enable
 input [15:0] data,
 input [15:0] addr,
 
-input fc1_com_end,
-input fc2_com_end,
+input fc1_com_end,      //FC1 computation finish
+input fc2_com_end,      //FC2 computation finish
 input bck_prop_start,   //start back propagation in each batch 
-input batch_end,        //all 32 mini batch is done
+input batch_end,        //all 32 mini batch is done update weight
 
 output [15:0] re_data,
-output reg fc_bck_prop_end,
-output reg [15:0] fc_err_prop,
-output reg [15:0] fc_err_addr,
-output reg fc_batch_end
+output reg fc_bck_prop_end,     //FC back propagation end(single mini batch)
+output reg [15:0] fc_err_prop,  //FC back propagation data
+output reg [15:0] fc_err_addr,  //FC back propagation address
+output reg fc_batch_end         //update weight done at the time all 32 mini batch done
 );
 
 `include "fixed_mult.v"

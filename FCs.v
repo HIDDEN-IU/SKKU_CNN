@@ -9,23 +9,18 @@ input [15:0] input_value,
 //input fc_bck_prop_end,
 
 output all_end,
-output we,
-output [15:0] data,
-output [15:0] addr,
+output reg we,
+output reg [15:0] data,
+output reg [15:0] addr,
 output fc1_com_end,
 output fc2_com_end
 );
 
-wire [15:0] value1, value2;
+reg [15:0] value1, value2;
 wire [15:0] data1, data2;
 wire [15:0] addr1, addr2;
 wire layer_end, we1, we2;
 
-one_to_two_demux_16bit demux1(.a(input_value), .s(layer_end), .out1(value1), .out2(value2));
-
-two_to_one_mux_16_bit mux1(.a(data1), .b(data2), .s(layer_end), .out(data));
-two_to_one_mux_16_bit mux2(.a(addr1), .b(addr2), .s(layer_end), .out(addr));
-two_to_one_mux_16_bit #(.BITS(1)) mux3(.a(we1), .b(we2), .s(layer_end), .out(we));
 
 FC_SINGLE_LAYER #(
 .FRT_CELL(FRT_CELL),
@@ -56,5 +51,44 @@ FC_SINGLE_LAYER #(
 .com_end(fc2_com_end),
 .layer_end(all_end)
 );
+
+always @(*)
+begin : demux1
+    case(layer_end)
+        1'b0 : begin
+            value1 = input_value;
+            value2 = 1'b0;
+        end
+        1'b1 : begin
+            value2 = input_value;
+            value1 = 1'b0;
+        end
+        default begin
+            value1 = 1'b0;
+            value2 = 1'b0;
+        end
+    endcase
+end
+
+always @(*)
+begin : mux1
+    case(layer_end)
+        1'b0 : begin
+            we = we1;
+            data = data1;
+            addr = addr1;
+        end
+        1'b1 : begin
+            we = we2;
+            data = data2;
+            addr = addr2;
+        end
+        default begin
+            we = 1'b0;
+            data = 1'b0;
+            addr = 1'b0;
+        end
+    endcase
+end
 
 endmodule

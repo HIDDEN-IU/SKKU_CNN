@@ -64,7 +64,7 @@ begin
     end
     #10 WE = 1'b0;
     //input weight1 at ram0
-    #10 WEIGHT1 = 1'b1; WEIGHT2 = 1'b0; RIGHT_ANSWER = 1'b1;
+    #10 WEIGHT1 = 1'b1; WEIGHT2 = 1'b0; RIGHT_ANSWER = 1'b0;
     for (i=0; i<FRT_CELL*MID_CELL; i = i+1) begin
             ex_value = -250 + 3*i;
             WE = 1'b1;
