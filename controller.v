@@ -128,7 +128,7 @@ begin : STATE_GEN
             end
         end
         UPDATE : begin
-            if (done_weight_update) next_state = CONV_WEIGHT_1;
+            if (done_weight_update) next_state = INPUT;
             else next_state = next_state;
         end
         default : next_state = INIT;
