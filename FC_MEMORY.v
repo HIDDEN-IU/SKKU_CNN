@@ -23,6 +23,7 @@ output reg fc_batch_end         //update weight done at the time all 32 mini bat
 );
 
 `include "fixed_mult.v"
+`include "bits_required.v"
 
 parameter LN_RATIO = (16'b1 << 5);    //0000_0000_0010_0000==32
 
@@ -160,14 +161,14 @@ begin
         //---------------------------------32 mini batch finished-----------------------------------//
         if (batch_end) begin
             if (update_i < (FRT_CELL*MID_CELL)) begin
-                ram[0][FRT_CELL + update_i] <= ram[0][FRT_CELL + update_i] + (ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + update_i] >>> 5);
+                ram[0][FRT_CELL + update_i] <= ram[0][FRT_CELL + update_i] + (ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + update_i] >>> bits_required(BATCH_SIZE-1));
                 ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + update_i] <= 1'b0;
                 update_i <= update_i + 1'b1;
             end else begin
                 fc_batch_end <= 1'b1;
             end
             if (update_j < (MID_CELL*BCK_CELL)) begin
-                ram[1][MID_CELL + update_j] <= ram[1][MID_CELL + update_j] + (ram[1][2*MID_CELL + MID_CELL*BCK_CELL + update_j] >>> 5);
+                ram[1][MID_CELL + update_j] <= ram[1][MID_CELL + update_j] + (ram[1][2*MID_CELL + MID_CELL*BCK_CELL + update_j] >>> bits_required(BATCH_SIZE-1));
                 ram[1][2*MID_CELL + MID_CELL*BCK_CELL + update_j] <= 1'b0;
                 update_j <= update_j + 1'b1;
             end
