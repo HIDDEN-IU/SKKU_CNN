@@ -9,7 +9,7 @@ output signed [15:0] hrzt_out,
 output signed [15:0] vrtc_out
 );
 
-//multiplier
+//multiplier 
 `include "fixed_mult.v" 
 
 //register holding pass value

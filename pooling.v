@@ -1,148 +1,88 @@
 module POOLING #(
-parameter n = 3,
-parameter SIZE = n + n)(
+parameter n = 3)(
 input clk,
-input reset_n,
-input en_reg,
-input en_pooling, //pooling enable
-input [15:0] conv_out,
-output [15:0] pooling_out,
+input rst_n,
+input load,
+input [15:0] in,
+output [15:0] result,
 output [15:0] addr,
-output done_pooling
+output res_sig
 );
+parameter SIZE = 2*n;
+
+
 reg [15:0] input_arr [0:SIZE-1] [0:SIZE-1];
+reg [15:0] pooled_val;
 reg [7:0] i, j, count, count_end, row, col, addr_reg;
 reg [2:0] pass;
 reg done;
 
+reg [15:0] max_12;
+reg [15:0] max_123;
+
 always @ (posedge clk or negedge reset_n)
 begin : OUT_GEN
     if (~ reset_n) begin
-        i <= 0;
-        j <= 0;
-        pass <= 0;
-        addr_reg <= 0;
-        count <= 0;
-        count_end <= 0;
-        row <= 0;
-        col <= 0;
-        done <= 0;
+        i <= 8'd0;
+        j <= 8'd0;
+        pass <= 3'd0;
+        addr_reg <= 8'd0;
+        count <= 8'd0;
+        count_end <= 8'd0;
+        row <= 8'd0;
+        col <= 8'd0;
+        done <= 1'b0;
     end else if (en_reg) begin
         if (j == n+n-1) begin
             input_arr[i][j] <= conv_out;
-            pass <= pass + 1;
+            pass <= pass + 3'd1;
             if (pass == 2) begin
-                i <= i + 1;
-                j <= 0;
-                pass <= 0;
+                i <= i + 8'd1;
+                j <= 8'd0;
+                pass <= 3'd0;
             end
         end else begin
-            j <= j + 1;
+            j <= j + 8'd1;
             input_arr[i][j] <= conv_out;
         end
     end else if (en_pooling) begin
         if (count_end !== n) begin
-            addr_reg <= addr_reg + 1;
             if (count == 0) begin
-                row <= 0;
-                col <= 0;
+                row <= 8'd0;
+                col <= 8'd0;
                 count <= count + 1;
+                addr_reg <= 0;
             end else if (count == n) begin
-                row <= row + 2;
-                col <= 0;
-                count <= 1;
-                count_end <= count_end + 1;
+                row <= row + 8'd2;
+                col <= 8'd0;
+                count <= 8'd1;
+                count_end <= count_end + 8'd1;
+                addr_reg <= addr_reg + 8'd1;
             end else begin
-                col <= col + 2;
-                count <= count + 1;
+                col <= col + 8'd2;
+                count <= count + 8'd1;
+                addr_reg <= addr_reg + 8'd1;
                 if (count_end == n-1 && count == n-1)
-                    count_end <= count_end + 1;
+                    count_end <= count_end + 8'd1;
             end
         end else
             done <= 1'b1;
     end
 end
 
-FIND_MAX MAX (.c11(input_arr[row][col]),
-              .c12(input_arr[row][col + 1]),
-              .c21(input_arr[row + 1][col]),
-              .c22(input_arr[row + 1][col + 1]),
-              .pooled_val(pooling_out));
-
-assign addr = addr_reg;
-assign done_pooling = done;
-
-endmodule
-
-/*module POOLING_MEMORY (
-input clk,
-input reset_n
-input en,
-input [15:0] data,
-input [7:0] address,
-output [15:0] c11,
-output [15:0] c12,
-output [15:0] c21, 
-output [15:0] c22
-);
-reg we, en;
-reg [7:0] addr_reg_1, addr_reg_2, addr_reg_3, addr_reg_4;
-reg [15:0] data_reg;
-wire [15:0] c11, c12, c21, c22;
-
 always @ (*)
-    if (en) begin
-        we = 1;
-        data_reg = data;
-        addr_reg_1 = address;
-        addr_reg_2 = address;
-        addr_reg_3 = address;
-        addr_reg_4 = address;
+begin
+    if (en_pooling) begin
+        max_12 = input_arr[row][col]>=input_arr[row][col + 8'd1] ? input_arr[row][col]:input_arr[row][col + 8'd1];
+        max_123 = max_12>=input_arr[row + 8'd1][col] ? max_12:input_arr[row + 8'd1][col];
+	pooled_val = max_123>=input_arr[row + 8'd1][col + 8'd1] ? max_123:input_arr[row + 8'd1][col + 8'd1];
     end else begin
-        we = 0;
-
-        addr_reg_1 = c11;
-        addr_reg_2 = c12;
-        addr_reg_3 = c21;
-        addr_reg_4 = c22;
+	pooled_val = 0;
     end
 end
 
-single_port_ram RAM1 (.data(data_reg), .addr(addr_reg_1), .we(we), .clk(clk), .q(c11));
-single_port_ram RAM2 (.data(data_reg), .addr(addr_reg_2), .we(we), .clk(clk), .q(c12));
-single_port_ram RAM3 (.data(data_reg), .addr(addr_reg_3), .we(we), .clk(clk), .q(c21));
-single_port_ram RAM4 (.data(data_reg), .addr(addr_reg_4), .we(we), .clk(clk), .q(c22));
-
-endmodule*/
-
-
-module FIND_MAX(
-input [15:0] c11,
-input [15:0] c12,
-input [15:0] c21,
-input [15:0] c22,
-output [15:0] pooled_val
-);
-
-/*parameter pool_len = 2;
-reg [7:0] array [0 : pool_len*pool_len - 1];*/
-
-wire [15:0] max_12;
-wire [15:0] max_123;
-
-assign max_12 = c11>=c12 ? c11:c12;
-assign max_123 = max_12>=c21 ? max_12:c21; 
-assign pooled_val = max_123>=c22 ? max_123:c22;
-
-/*function [7:0] MAX(
-    input [7:0] A, B
-);
-begin
-    if (A > B)
-        MAX = A;
-    else
-        MAX = B;
-end
-endfunction*/
+assign pooling_out = pooled_val;
+assign addr = addr_reg;
+assign done_pooling = done;
 
 endmodule
