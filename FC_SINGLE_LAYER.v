@@ -87,6 +87,7 @@ begin
 						//output back cell's values
 						if(back_i < BCK_CELL) begin
 							out <= back_cell[back_i];
+                            back_cell[back_i] <= 1'b0;
 							back_i <= back_i + 1'b1;
 							addr <= addr + 1'b1;
 							we <= 1'b1;
@@ -109,8 +110,8 @@ begin
 				end
 			end
 		end else begin
-            com_end <= 1'b0;
-            layer_end <= 1'b0;
+            {com_i, com_j, front_i, weight_i, weight_j, back_i, 
+		layer_end, addr_delay, com_end, we} <= 1'b0;
         end
 	end
 end
