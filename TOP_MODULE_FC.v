@@ -2,23 +2,24 @@
 module TOP_MODULE_FC #(
 parameter FRT_CELL = 14,
 parameter MID_CELL = 10,
-parameter BCK_CELL = 5)(
+parameter BCK_CELL = 5,
+parameter BATCH_SIZE = 32)(
 input clk,
 input reset_n,
-input enable,               //FC start when 1
-input ex_we,              //flatten input write enable
-input [15:0] ex_value,    //flatten input data
-input [15:0] ex_addr,     //flatten input address
-input bck_prop_start,       //back propagation start when 1
-input batch_end,            //32 mini batch finished
 input weight1,              //FC weight1 in when 1
 input weight2,              //FC weight2 in when 1
 input right_answer,         //final 10 right answer when 1
+input enable,               //FC start when 1
+input ex_we,                //flatten input write enable
+input [15:0] ex_value,      //flatten input data
+input [15:0] ex_addr,       //flatten input address
+input bck_prop_start,       //back propagation start when 1
+input batch_end,            //32 mini batch finished
 
 output all_end,             //signal to controller, FC finished when 1
 output fc_bck_prop_end,     //propagation in FC finished when 1
 output [15:0] fc_err_prop,  //propagation error from final result
-output [15:0] fc_err_addr,   //propagation address
+output [15:0] fc_err_addr,  //propagation address
 output fc_batch_end
 );
 
@@ -49,7 +50,8 @@ FCs #(
 FC_MEMORY #(
 .FRT_CELL(FRT_CELL),
 .MID_CELL(MID_CELL),
-.BCK_CELL(BCK_CELL)) FC_MEM(
+.BCK_CELL(BCK_CELL),
+.BATCH_SIZE(BATCH_SIZE)) FC_MEM(
 .clk(clk),
 .reset_n(reset_n),
 
