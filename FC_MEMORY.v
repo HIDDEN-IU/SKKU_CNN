@@ -104,7 +104,7 @@ begin
                             //delta weight = r * cell * error
                             ram[1][2*MID_CELL + MID_CELL*BCK_CELL + mid_i*MID_CELL + mid_j]
                                 <= ram[1][2*MID_CELL + MID_CELL*BCK_CELL + mid_i*MID_CELL + mid_j]
-                                    + fixed_mult(LN_RATIO, fixed_mult(ram[1][mid_j], ram[2][2*BCK_CELL + mid_i]));       //delta weight
+                                    + fixed_mult(ram[2][2*BCK_CELL + mid_i], fixed_mult(ram[1][mid_j], LN_RATIO));       //delta weight
                             mid_j <= mid_j + 1'b1;
                             if (mid_j == (MID_CELL - 1'b1)) begin
                                 mid_i <= mid_i + 1'b1;
@@ -127,7 +127,7 @@ begin
                                 //delta weight = r * cell * error
                                 ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + front_i*FRT_CELL + front_j]
                                     <= ram[0][2*FRT_CELL + FRT_CELL*MID_CELL + front_i*FRT_CELL + front_j]
-                                        + fixed_mult(LN_RATIO, fixed_mult(ram[0][front_j], ram[1][MID_CELL*BCK_CELL + MID_CELL + front_i]));       //delta weight
+                                        + fixed_mult(ram[1][MID_CELL*BCK_CELL + MID_CELL + front_i], fixed_mult(LN_RATIO, ram[0][front_j]));       //delta weight
                                 front_j <= front_j + 1'b1;
                                 if (front_j == (FRT_CELL - 1'b1)) begin
                                     front_i <= front_i + 1'b1;
