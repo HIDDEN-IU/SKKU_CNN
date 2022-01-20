@@ -4,7 +4,7 @@ module pooling_2_tb();
 
 parameter f_size = 4;
 parameter LEN = 8;
-reg clk, reset, en_reg, en_pooling;
+reg clk, rst, load;
 reg [15:0] in1 [7:0];
 reg [15:0] in2 [7:0];
 reg [15:0] in3 [7:0];
@@ -21,15 +21,14 @@ wire [2:0] his;
 wire done;
 integer i;
 
-POOLING #(.n(f_size)) S2 (.clk(clk), .reset_n(reset), .en_reg(en_reg), .en_pooling(en_pooling),
-                          .conv_out(conv_out), .pooling_out(result), .history(his),
-                          .addr(address), .done_pooling(done));
+POOLING #(.n(f_size)) S2 (.clk(clk), .rst_n(rst), .load(load),
+                          .in(conv_out), .result(result), .addr(address),
+                          .history(his), .reg_sig(done));
 
 initial begin
     clk = 1'b0;
-    reset = 1'b0;
-    en_reg = 1'b0;
-    en_pooling = 1'b0;
+    rst = 1'b0;
+    load = 1'b0;
     conv_out = 0;
     in1[0] = 38;
     in1[1] = 34;
@@ -109,8 +108,8 @@ initial begin
 end
 
 initial begin
-    #25 reset = 1'b1;
-    #10 en_reg = 1'b1;
+    #25 rst = 1'b1;
+    #10 load = 1'b1;
     @(posedge clk);
     for (i = 0; i < LEN; i = i+1) begin
         conv_out = in1[i];
@@ -158,10 +157,9 @@ initial begin
         conv_out = in8[i];
         #20;
     end
-    #40;
+    #20;
     
-    en_reg = 1'b0;
-    en_pooling = 1'b1;
+    load = 1'b0;
 end
 
 endmodule
