@@ -1,67 +1,50 @@
+
 module COMPUTATION #(
-parameter IMG = 6'd14,
-parameter PAD = 6'd1)(
+parameter FRT = 6'd14,
+parameter PAD = 6'd2)(
 input clk,
 input reset_n,
 input i_load,
 input w_load,
-input signed [15:0] img_in,
+input signed [15:0] i_in,
+input signed [15:0] w_in,
 
-output signed [15:0] result,
-output srt_pool,
-output end_sig
+output [15:0] pool_result,
+output [15:0] addr,
+output [1:0] history,
+output com_end
+
 );
 
-localparam SIZE = IMG + 2*PAD;
+parameter SIZE = FRT + PAD;
 
-wire signed [15:0] i_out1, i_out2, i_out3, w_out1, w_out2, w_out3;
-wire signed [15:0] io1, io2, io3;
-wire signed [15:0] result;
-wire end_sig, srt_sig, srt_poolpass;
+wire signed [15:0] sys_result;
+wire res_sig;
 
-INPUT #(
-.IMG(IMG),
-.PAD(PAD))(
+SYS_ARRAY #(
+.SIZE(SIZE)) sys_array(
 .clk(clk),
 .rst_n(reset_n),
-.load(i_load),//single clock signal
-.img_in(img_in),
-.srt_sig(srt_sig),
+.i_load(i_load),
+.w_load(w_load),
+.i_in(i_in),
+.w_in(w_in),
 
-.out1(i_out1),
-.out2(i_out2),
-.out3(i_out3)
+.result(sys_result),
+.res_sig(res_sig)
 );
 
-module WEIGHT(
+POOLING #(
+.SIZE(SIZE/2)) pooling(
 .clk(clk),
 .rst_n(reset_n),
-.load(w_load),
-.pass(pass),
+.load(res_sig),
+.in(sys_result),
 
-.out1(w_out1),
-.out2(w_out2),
-.out3(w_out3)
+.result(pool_result),
+.addr(addr),
+.history(history),
+.reg_sig(com_end)
 );
-
-module SYS_ARRAY #(
-.SIZE(SIZE))(
-.clk(clk),
-.rst_n(reset_n),
-.pass(pass),
-.srt_sig(srt_sig), // start signal
-.in_hrzt1(i_out1),
-.in_hrzt2(i_out2),
-.in_hrzt3(i_out3),
-.in_vrtc1(w_out1),
-.in_vrtc2(w_out2),
-.in_vrtc3(w_out3),
-
-.result(result),
-.srt_pool(srt_pool),
-.end_sig(end_sig)
-);
-
-
 
 endmodule

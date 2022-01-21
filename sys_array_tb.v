@@ -48,13 +48,14 @@ MEM #(
     .addr   (addr),
     .data_out(w_in)
     );
-
+wire end_sig;
 COUNTER COUNTER1 (
     .clk    (clk), 
     .rst_n  (rst_n), 
     .size   (size), 
     .enable (cnt_en), 
-    .count  (addr)
+    .count  (addr),
+    .end_sig(end_sig)
     );
     
 

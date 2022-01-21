@@ -1,4 +1,11 @@
-C:/Users/06214/Documents/GitHub/SKKU_CNN/counter_tb.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/counter_tb.v
+C:/Users/06214/Documents/GitHub/SKKU_CNN/pe.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/pe.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module PE
+
+Top level modules:
+	PE
+
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/counter_tb.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/counter_tb.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module COUNTER_TB
 
@@ -19,14 +26,11 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	ReLU_tb
 
-} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/pe.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/pe.v
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU6.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU6.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module PE
+** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU6.v(2): (vlog-2155) Global declarations are illegal in Verilog 2001 syntax.
 
-Top level modules:
-	PE
-
-} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v
+} {3.0 4.0} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module INPUT_TB
 ** Error (suppressible): C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v(30): (vlog-2388) 'addr' already declared in this scope (INPUT_TB) at C:/Users/06214/Documents/GitHub/SKKU_CNN/inputtb.v(12).
@@ -57,6 +61,20 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	FC_SINGLE_LAYER
 
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module POOLING
+
+Top level modules:
+	POOLING
+
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/counter.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/counter.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module COUNTER
+
+Top level modules:
+	COUNTER
+
 } {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/weight.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/weight.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module WEIGHT
@@ -64,16 +82,7 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	WEIGHT
 
-} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module POOLING
-** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v(23): (vlog-2730) Undefined variable: 'reset_n'.
-** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v(35): (vlog-2730) Undefined variable: 'en_reg'.
-** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v(37): (vlog-2730) Undefined variable: 'conv_out'.
-** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v(48): (vlog-2730) Undefined variable: 'en_pooling'.
-** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/pooling.v(75): (vlog-2730) Undefined variable: 'en_pooling'.
-
-} {4.0 9.0} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU.v
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 ** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/ReLU.v(1): (vlog-2155) Global declarations are illegal in Verilog 2001 syntax.
 
@@ -116,6 +125,13 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	PE_TB
 
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/computation.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/COMPUTATION.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module COMPUTATION
+
+Top level modules:
+	COMPUTATION
+
 } {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/sa.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/sa.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module SA
@@ -153,20 +169,20 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	SYS_ARRAY
 
-} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/unpool.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/unpool.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module UNPOOLING
-
-Top level modules:
-	UNPOOLING
-
 } {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/conv_top_tb.v {0 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/conv_top_tb.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module CONV_TB
 ** Error: C:/Users/06214/Documents/GitHub/SKKU_CNN/conv_top_tb.v(41): (vlog-2730) Undefined variable: 'w_count'.
 ** Error: (vlog-13069) C:/Users/06214/Documents/GitHub/SKKU_CNN/conv_top_tb.v(105): near ".": syntax error, unexpected '.'.
 
-} {4.0 6.0} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/SIGMOID_APPROX.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/SIGMOID_APPROX.v
+} {4.0 6.0} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/unpool.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/unpool.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module UNPOOLING
+
+Top level modules:
+	UNPOOLING
+
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/SIGMOID_APPROX.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/SIGMOID_APPROX.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module SIGMOID_APPROX_FN
 
@@ -180,12 +196,12 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	MEM
 
-} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/input.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/input.v
+} {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/computation_tb.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/computation_tb.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module INPUT
+-- Compiling module COMPUTATION_tb
 
 Top level modules:
-	INPUT
+	COMPUTATION_tb
 
 } {} {}} C:/Users/06214/Documents/GitHub/SKKU_CNN/TOP_MODULE_FC.v {1 {vlog -work work -stats=none C:/Users/06214/Documents/GitHub/SKKU_CNN/TOP_MODULE_FC.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020

@@ -1,5 +1,5 @@
 module POOLING #(
-parameter n = 3)(
+parameter SIZE = 6)(
 input clk,
 input rst_n,
 input load,
@@ -10,7 +10,7 @@ output [2:0] history,
 output reg_sig
 );
 
-localparam SIZE = n + n;
+localparam n = SIZE/2;
 
 reg [15:0] input_arr [0:SIZE-1] [0:SIZE-1];
 reg [15:0] pooled_val;

@@ -23,20 +23,24 @@ assign {out1, out2, out3} = {out1reg, out2reg_1delay, out3reg_2delay};
 
 reg [3:0] count;
 
+reg end_reg;
+
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         count <= 4'd0;
         pass_reg <= 1'd0;
+        end_reg <= 1'd0;
         row <= 2'd0;
         col <= 2'd0;
         {out1reg, out2reg, out3reg} <= {2'd3*{16'sd0}};
     end else begin
-        if (!load_reg) begin
+        if (!load_reg && end_reg) begin
             count <= 4'b0;
             pass_reg <= 1'b0;
             row <= 2'd0;
             col <= 2'd0;
         end else begin
+            end_reg <= 1'b1;
             if (row < 3) begin
                 pass_reg <= 1'b1;
                 filt[row][col] <= in;
@@ -56,6 +60,7 @@ always @(posedge clk or negedge rst_n) begin
                 out2reg <= 16'sd0;
                 out3reg <= 16'sd0;
                 pass_reg <= 1'b0;
+                end_reg <= 1'b0;
             end
         end
     end

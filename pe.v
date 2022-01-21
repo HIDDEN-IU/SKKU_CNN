@@ -6,11 +6,11 @@ input signed [15:0] hrzt,
 input signed [15:0] vrtc,
 output pass_out,
 output signed [15:0] hrzt_out,
-output signed [15:0] vrtc_out
+output signed [15:0] vrtc_out 
 );
 
 //multiplier 
-`include "fixed_mult.v" 
+`include "fixed_mult.v"  
 
 //register holding pass value
 reg pass_reg;

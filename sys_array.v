@@ -11,10 +11,10 @@ output signed [15:0] result,
 output res_sig
 );
 
-wire pass;
+wire pass; 
 wire srt_sig;
 
-`include "ReLU.v"
+`include "ReLU6.v"
 //wires between PEs and I/O.
 wire               pass_wire [1:3][0:3];
 wire signed [15:0] in_h      [1:3];
@@ -33,7 +33,7 @@ reg [7:0] res_row,res_col;
 
 //final output
 reg [15:0] res_reg;
-assign result = res_reg;
+assign result = ReLU6(res_reg);
 
 //makes pooling module to catch data
 reg res_sig_reg;
@@ -99,7 +99,7 @@ always @(posedge clk, negedge rst_n) begin : ACCUMULATOR
             if (res_row < SIZE-2) begin
                 if (res_col < SIZE-2) begin
                     res_sig_reg <= 1'b1;
-                    res_reg <= RELU6(out1_delay[4] + out2_delay[2] + out[3]);
+                    res_reg <= out1_delay[4] + out2_delay[2] + out[3];
                     res_col <= res_col + 8'd1;
                 end else if (res_col < SIZE-1) begin //have to rest 2 clocks
                     res_col <= res_col + 8'd1;
