@@ -41,7 +41,7 @@ wire layer3_end [31:0];
 wire signed [15:0] flat_wire[31:0];
 
 reg signed [7:0] count;
-reg [7:0] out_count;
+reg [15:0] out_count;
 reg done_layer3_reg, done1, done2, done3;
 reg w_load_reg1, w_load_reg2, w_load_reg3;
 reg i_load_reg1, i_load_reg2, i_load_reg3;
@@ -204,10 +204,10 @@ assign done_layer1 = done_pool1[0];
 assign done_layer2 = done_pool2[0];
 assign done_layer3 = done_layer3_reg;
 
-assign i_3_in = (i_3_in_m[0] + i_3_in_m[1] + i_3_in_m[2] + i_3_in_m[3] +
+assign i_3_in = ((i_3_in_m[0] + i_3_in_m[1] + i_3_in_m[2] + i_3_in_m[3] +
                  i_3_in_m[4] + i_3_in_m[5] + i_3_in_m[6] + i_3_in_m[7] +
                  i_3_in_m[8] + i_3_in_m[9] + i_3_in_m[10] + i_3_in_m[11] +
-                 i_3_in_m[12] + i_3_in_m[13] + i_3_in_m[14] + i_3_in_m[15]) >>> 5;
+                 i_3_in_m[12] + i_3_in_m[13] + i_3_in_m[14] + i_3_in_m[15]));
 
 always @(posedge clk or negedge reset_n)
 begin : WEIGHT_SAVER
@@ -393,19 +393,31 @@ always @(posedge clk or negedge reset_n)
 begin : OUT_GEN
     if (!reset_n) begin
         out_count <= 1'b0;
+        we_out <= 1'b0;
+        addr_out <= 1'b0;
+        done_layer3_reg <= 1'b0;
     end else begin
-        if (!layer3_end[0]) begin
-            flat_out <= flat_reg[out_count];
-            addr_out <= out_count;
-            we_out <= 1'b1;
-            out_count <= out_count + 1'b1;
+        if (srt_layer3) begin
+            if (!layer3_end[0]) begin
+                flat_out <= flat_reg[out_count];
+                addr_out <= out_count;
+                we_out <= 1'b1;
+                out_count <= out_count + 1'b1;
+                if (addr_out > 32) begin
+                    done_layer3_reg <= 1'b1;
+                    we_out <= 1'b0;
+                end else if (addr_out > 30) begin
+                    we_out <= 1'b0;
+                end
+            end else begin
+                out_count <= 1'b0;
+                addr_out <= 1'b0;
+                we_out <= 1'b0;
+                for (cnt = 0; cnt < 8'd32; cnt = cnt + 1'b1)
+                    flat_reg[cnt] <= flat_wire[cnt];
+            end
         end else begin
-            out_count <= 1'b0;
-            done_layer3_reg <= 1'b1;
-            addr_out <= 1'b0;
-            we_out <= 1'b0;
-            for (cnt = 0; cnt < 8'd32; cnt = cnt + 1'b1)
-                flat_reg[cnt] <= flat_wire[8'd31-cnt];
+            done_layer3_reg <= 1'b0;
         end
     end
 end

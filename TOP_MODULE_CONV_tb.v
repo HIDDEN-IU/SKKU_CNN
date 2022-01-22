@@ -12,9 +12,6 @@ reg WE, CONV_WEIGHT1, CONV_WEIGHT2, CONV_WEIGHT3, IMG_INPUT,
 wire DONE_LAYER1, DONE_LAYER2, DONE_LAYER3, WE_OUT;
 wire [15:0] FLAT_OUT, ADDR_OUT;
 
-
-integer signed i, j;
-
 initial
 begin
 CLK = 0;
@@ -28,7 +25,8 @@ begin
 	end
 end
 
-TOP_MODULE_CONV top_module_conv(
+TOP_MODULE_CONV #(
+.IMG_SIZE(5'd18)) top_module_conv(
 .clk(CLK),
 .reset_n(RESET_N),
 .data(DATA),
@@ -38,13 +36,13 @@ TOP_MODULE_CONV top_module_conv(
 .conv_weight2(CONV_WEIGHT2),
 .conv_weight3(CONV_WEIGHT3),
 .img_input(IMG_INPUT),
-.srt_layer1(SRT_LAYER1),  //
-.srt_layer2(SRT_LAYER2),  //
-.srt_layer3(SRT_LAYER3),  //
+.srt_layer1(SRT_LAYER1),
+.srt_layer2(SRT_LAYER2),
+.srt_layer3(SRT_LAYER3),
 
-.done_layer1(DONE_LAYER1),      //
-.done_layer2(DONE_LAYER2),      //
-.done_layer3(DONE_LAYER3),      //
+.done_layer1(DONE_LAYER1),
+.done_layer2(DONE_LAYER2),
+.done_layer3(DONE_LAYER3),
 .flat_out(FLAT_OUT),
 .addr_out(ADDR_OUT),
 .we_out(WE_OUT)
@@ -894,7 +892,7 @@ begin
     wait(DONE_LAYER1); SRT_LAYER1 = 1'B0; SRT_LAYER2 = 1'B1; $stop; 
     wait(DONE_LAYER2); SRT_LAYER2 = 1'B0; SRT_LAYER3 = 1'B1; $stop; 
     wait(DONE_LAYER3); SRT_LAYER3 = 1'b0; $stop;
-    #100;
+    #400;
     $stop;
 end
 
