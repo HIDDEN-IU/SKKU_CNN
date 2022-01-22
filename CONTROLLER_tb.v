@@ -30,7 +30,7 @@ reg [15:0] EX_VALUE, EX_ADDR;                           //
 reg WE;                                                 //
                                                         //
 wire CONV_WEIGHT1, CONV_WEIGHT2, CONV_WEIGHT3,          //
-     FC_WEIGHT1, FC_WEIGHT2, RIGHT_ANSWER,              //
+     FC_WEIGHT1, FC_WEIGHT2, IMG_INPUT, RIGHT_ANSWER,   //
      SRT_LAYER1, SRT_LAYER2, SRT_LAYER3,                //
      SRT_FC_FWD, FC_BP_SRT, LAYER_3, WEIGHT_UPDATE,     //
      DONE_FC_FWD, DONE_FC_BCK_PROP,//<------------------//
@@ -64,6 +64,7 @@ CONTROLLER #(
 .conv_weight3(CONV_WEIGHT3),
 .fc_weight1(FC_WEIGHT1),
 .fc_weight2(FC_WEIGHT2),
+.img_input(IMG_INPUT),
 .right_answer(RIGHT_ANSWER),
 .srt_layer1(SRT_LAYER1),
 .srt_layer2(SRT_LAYER2),

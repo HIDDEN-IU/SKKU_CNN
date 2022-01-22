@@ -26,13 +26,14 @@ output reg fc_batch_end         //update weight done at the time all 32 mini bat
 `include "bits_required.v"
 
 parameter LN_RATIO = (16'b1 << 5);    //0000_0000_0010_0000==32
+parameter NBITS = bits_required((2*FRT_CELL*MID_CELL) + (2*FRT_CELL));
 
 // Declare the RAM variable
-reg signed [15:0] ram[2:0][65535:0];
+reg signed [15:0] ram[2:0][0:((2*FRT_CELL*MID_CELL) + (2*FRT_CELL) - 1)];
 reg [1:0] mem_num_d, mem_num_m;
 
 // Variable to hold the registered read address
-reg [15:0] addr_reg;
+reg [NBITS-1:0] addr_reg;
 
 reg signed [15:0] i,back_i, mid_i, mid_j, front_i, front_j, out_i;
 reg signed [15:0] update_i, update_j;

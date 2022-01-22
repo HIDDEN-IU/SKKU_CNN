@@ -28,6 +28,7 @@ output reg conv_weight2,//'weight 16'
 output reg conv_weight3,//'weight 32'
 output reg fc_weight1,  //'weight1'
 output reg fc_weight2,  //'weight2'
+output reg img_input,   //'image input'
 output reg right_answer,//'right_answer'
 output reg srt_layer1,  //
 output reg srt_layer2,  //
@@ -147,7 +148,7 @@ end
 always @ (state)
 begin : OUT_GEN
     {conv_weight1, conv_weight2, conv_weight3,
-     fc_weight1, fc_weight2, right_answer,
+     fc_weight1, fc_weight2, img_input, right_answer,
      srt_layer1, srt_layer2, srt_layer3, srt_fc_fwd,
      fc_bp_srt, layer_3, weight_update} = 1'b0;
     case (state)
@@ -156,6 +157,7 @@ begin : OUT_GEN
         CONV_WEIGHT_3 : conv_weight3 = 1'b1;
         FC_WEIGHT_1   : fc_weight1 = 1'b1;
         FC_WEIGHT_2   : fc_weight2 = 1'b1;
+        INPUT         : img_input = 1'b1;
         RIGHT_ANSWER  : right_answer = 1'b1;
         CONV_LAYER1   : srt_layer1 = 1'b1;
         CONV_LAYER2   : srt_layer2 = 1'b1;

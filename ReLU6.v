@@ -9,7 +9,7 @@ begin
         ReLU6 = 16'd1536;
 	end else if(in[15] == 1'b0) begin
 		ReLU6 = in;
-	end else begin
+	end else begin 
 		ReLU6 = 1'b0;
 	end
 end
