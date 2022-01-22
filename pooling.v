@@ -68,12 +68,12 @@ begin : OUT_GEN
                         {row, col, count, count_end} <= 6'd0;
                         en_pooling <= 1'b0;
                         addr_reg <= 6'd0;
+                        done_reg <= 1'b1;
                     end
                 end
             end else begin
                 {row, col, count, count_end} <= 6'd0;
                 en_pooling <= 1'b0;
-                done_reg <= 1'b1;
             end
         end
     end
