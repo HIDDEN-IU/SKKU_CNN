@@ -7,7 +7,8 @@ input [15:0] in,
 output [15:0] result,
 output [5:0] addr,
 output [2:0] history,
-output reg_sig
+output reg_sig,
+output done_pl
 );
 
 localparam SIZE = n + n;
@@ -16,7 +17,7 @@ reg [15:0] input_arr [0:SIZE-1] [0:SIZE-1];
 reg [15:0] pooled_val;
 reg [5:0] i, j, count, count_end, row, col, addr_reg;
 reg [2:0] pass;
-reg en_pooling;
+reg en_pooling, done_reg;
 
 reg [15:0] max_12, max_123;
 reg [2:0] max_12_his, max_123_his, his_reg;
@@ -33,7 +34,9 @@ begin : OUT_GEN
         count_end <= 6'd0;
         row <= 6'd0;
         col <= 6'd0;
+        done_reg <= 1'b0;
     end else begin
+        done_reg <= 1'b0;
         if (load) begin
             input_arr[i][j] <= in;
             if (j == SIZE-1) begin
@@ -51,22 +54,26 @@ begin : OUT_GEN
             end
         end
         if (en_pooling) begin
-            if (count_end !== n) begin
+            if (count_end < n) begin
                 addr_reg <= addr_reg + 6'd1;
-                if (count == n-1) begin
-                    row <= row <= + 6'd2;
+                if (count < n-1) begin
+                    col <= col + 6'd2;
+                    count <= count + 6'd1;
+                end else begin
+                    row <= row + 6'd2;
                     col <= 6'd0;
                     count <= 6'd0;
                     count_end <= count_end + 6'd1;
-                end else begin
-                    col <= col + 6'd2;
-                    count <= count + 6'd1;
-                    if (count_end == n-1 && count == n-1) begin
-                        count_end <= count_end + 6'd1;
+                    if (count_end == n-1) begin
+                        {row, col, count, count_end} <= 6'd0;
+                        en_pooling <= 1'b0;
+                        addr_reg <= 6'd0;
                     end
                 end
             end else begin
+                {row, col, count, count_end} <= 6'd0;
                 en_pooling <= 1'b0;
+                done_reg <= 1'b1;
             end
         end
     end
@@ -94,6 +101,6 @@ assign result = pooled_val;
 assign history = his_reg;
 assign addr = addr_reg;
 assign reg_sig = en_pooling;
+assign done_pl = done_reg;
 
 endmodule
-

@@ -18,12 +18,12 @@ reg [15:0] conv_out;
 wire [15:0] result;
 wire [5:0] address;
 wire [2:0] his;
-wire done;
+wire sig, done;
 integer i;
 
 POOLING #(.n(f_size)) S2 (.clk(clk), .rst_n(rst), .load(load),
                           .in(conv_out), .result(result), .addr(address),
-                          .history(his), .reg_sig(done));
+                          .history(his), .reg_sig(sig), .done_pl(done));
 
 initial begin
     clk = 1'b0;
